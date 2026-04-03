@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerar Favicon MLS</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; padding: 40px; gap: 30px; }
+    h1 { font-size: 22px; }
+    .preview { display: flex; gap: 40px; align-items: flex-end; }
+    .item { text-align: center; }
+    .item canvas { border: 1px solid #444; border-radius: 4px; }
+    .item p { margin: 8px 0 4px; font-size: 13px; color: #aaa; }
+    a.btn { display: inline-block; margin-top: 10px; padding: 8px 20px; background: #8B0000; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
+    a.btn:hover { background: #a00000; }
+  </style>
+</head>
+<body>
+  <h1>Favicon MLS - Preview e Download</h1>
+  <div class="preview">
+    <div class="item">
+      <canvas id="c16" width="16" height="16"></canvas>
+      <p>16x16</p>
+    </div>
+    <div class="item">
+      <canvas id="c32" width="32" height="32"></canvas>
+      <p>32x32</p>
+    </div>
+    <div class="item">
+      <canvas id="c48" width="48" height="48"></canvas>
+      <p>48x48</p>
+    </div>
+    <div class="item">
+      <canvas id="c64" width="64" height="64"></canvas>
+      <p>64x64</p>
+    </div>
+    <div class="item">
+      <canvas id="c180" width="180" height="180"></canvas>
+      <p>180x180 (Apple Touch)</p>
+    </div>
+    <div class="item">
+      <canvas id="c512" width="512" height="512"></canvas>
+      <p>512x512</p>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center;">
+    <a class="btn" id="dl16">Download 16x16 PNG</a>
+    <a class="btn" id="dl32">Download 32x32 PNG</a>
+    <a class="btn" id="dl48">Download 48x48 PNG</a>
+    <a class="btn" id="dl64">Download 64x64 PNG</a>
+    <a class="btn" id="dl180">Download 180x180 PNG</a>
+    <a class="btn" id="dl512">Download 512x512 PNG</a>
+    <a class="btn" id="dlIco">Download favicon.ico</a>
+  </div>
+
+  <script>
+    function drawFavicon(canvas) {
+      const s = canvas.width;
+      const ctx = canvas.getContext('2d');
+      const r = s * 0.12;
+
+      // Fundo com cantos arredondados
+      ctx.beginPath();
+      ctx.moveTo(r, 0);
+      ctx.lineTo(s - r, 0);
+      ctx.quadraticCurveTo(s, 0, s, r);
+      ctx.lineTo(s, s - r);
+      ctx.quadraticCurveTo(s, s, s - r, s);
+      ctx.lineTo(r, s);
+      ctx.quadraticCurveTo(0, s, 0, s - r);
+      ctx.lineTo(0, r);
+      ctx.quadraticCurveTo(0, 0, r, 0);
+      ctx.closePath();
+      ctx.fillStyle = '#8B0000';
+      ctx.fill();
+
+      // Letras
+      const fontSize = s * 0.30;
+      ctx.font = `700 ${fontSize}px Georgia, "Times New Roman", serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      const letters = [
+        { char: 'M', y: s * 0.22, alpha: 1.0 },
+        { char: 'L', y: s * 0.50, alpha: 0.78 },
+        { char: 'S', y: s * 0.78, alpha: 0.58 },
+      ];
+
+      letters.forEach(l => {
+        ctx.fillStyle = `rgba(255,255,255,${l.alpha})`;
+        ctx.fillText(l.char, s / 2, l.y);
+      });
+    }
+
+    const sizes = [16, 32, 48, 64, 180, 512];
+    const canvases = {};
+
+    sizes.forEach(s => {
+      const c = document.getElementById('c' + s);
+      drawFavicon(c);
+      canvases[s] = c;
+    });
+
+    // Download PNG
+    sizes.forEach(s => {
+      const btn = document.getElementById('dl' + s);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const link = document.createElement('a');
+          link.download = s === 180 ? 'apple-touch-icon.png' : `favicon-${s}x${s}.png`;
+          link.href = canvases[s].toDataURL('image/png');
+          link.click();
+        });
+      }
+    });
+
+    // Gerar ICO (contém 16, 32 e 48)
+    document.getElementById('dlIco').addEventListener('click', () => {
+      const icoSizes = [16, 32, 48];
+      const images = icoSizes.map(s => {
+        const c = canvases[s];
+        const ctx = c.getContext('2d');
+        return ctx.getImageData(0, 0, s, s);
+      });
+
+      const ico = createICO(images, icoSizes);
+      const blob = new Blob([ico], { type: 'image/x-icon' });
+      const link = document.createElement('a');
+      link.download = 'favicon.ico';
+      link.href = URL.createObjectURL(blob);
+      link.click();
+    });
+
+    function createICO(images, sizes) {
+      const numImages = images.length;
+      const headerSize = 6;
+      const dirEntrySize = 16;
+      const dirSize = dirEntrySize * numImages;
+      let dataOffset = headerSize + dirSize;
+
+      const entries = [];
+      const bitmaps = [];
+
+      for (let i = 0; i < numImages; i++) {
+        const s = sizes[i];
+        const img = images[i];
+        const bmp = createBMPData(img, s);
+        bitmaps.push(bmp);
+        entries.push({ size: s, offset: dataOffset, length: bmp.length });
+        dataOffset += bmp.length;
+      }
+
+      const totalSize = dataOffset;
+      const buffer = new ArrayBuffer(totalSize);
+      const view = new DataView(buffer);
+
+      // ICO Header
+      view.setUint16(0, 0, true);     // reserved
+      view.setUint16(2, 1, true);     // type: icon
+      view.setUint16(4, numImages, true);
+
+      // Directory entries
+      for (let i = 0; i < numImages; i++) {
+        const off = headerSize + i * dirEntrySize;
+        const s = entries[i].size;
+        view.setUint8(off, s < 256 ? s : 0);
+        view.setUint8(off + 1, s < 256 ? s : 0);
+        view.setUint8(off + 2, 0);    // color palette
+        view.setUint8(off + 3, 0);    // reserved
+        view.setUint16(off + 4, 1, true);  // color planes
+        view.setUint16(off + 6, 32, true); // bits per pixel
+        view.setUint32(off + 8, entries[i].length, true);
+        view.setUint32(off + 12, entries[i].offset, true);
+      }
+
+      // Bitmap data
+      for (let i = 0; i < numImages; i++) {
+        const arr = new Uint8Array(buffer, entries[i].offset, entries[i].length);
+        arr.set(bitmaps[i]);
+      }
+
+      return new Uint8Array(buffer);
+    }
+
+    function createBMPData(imageData, size) {
+      const w = size, h = size;
+      const headerSize = 40;
+      const pixelDataSize = w * h * 4;
+      const maskSize = Math.ceil(w / 32) * 4 * h;
+      const totalSize = headerSize + pixelDataSize + maskSize;
+      const buffer = new ArrayBuffer(totalSize);
+      const view = new DataView(buffer);
+
+      // BMP Info Header
+      view.setUint32(0, 40, true);       // header size
+      view.setInt32(4, w, true);          // width
+      view.setInt32(8, h * 2, true);      // height (doubled for ICO)
+      view.setUint16(12, 1, true);        // planes
+      view.setUint16(14, 32, true);       // bpp
+      view.setUint32(16, 0, true);        // compression
+      view.setUint32(20, pixelDataSize + maskSize, true);
+      view.setUint32(24, 0, true);
+      view.setUint32(28, 0, true);
+      view.setUint32(32, 0, true);
+      view.setUint32(36, 0, true);
+
+      // Pixel data (bottom-up, BGRA)
+      const pixels = new Uint8Array(buffer, headerSize, pixelDataSize);
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const srcIdx = ((h - 1 - y) * w + x) * 4;
+          const dstIdx = (y * w + x) * 4;
+          pixels[dstIdx]     = imageData.data[srcIdx + 2]; // B
+          pixels[dstIdx + 1] = imageData.data[srcIdx + 1]; // G
+          pixels[dstIdx + 2] = imageData.data[srcIdx];     // R
+          pixels[dstIdx + 3] = imageData.data[srcIdx + 3]; // A
+        }
+      }
+
+      // AND mask (all zeros = fully opaque, transparency handled by alpha)
+      const mask = new Uint8Array(buffer, headerSize + pixelDataSize, maskSize);
+      mask.fill(0);
+
+      return new Uint8Array(buffer);
+    }
+  </script>
+</body>
+</html>
