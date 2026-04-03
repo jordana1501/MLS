@@ -262,7 +262,7 @@ footer{padding:60px;background:#0d0d1a;border-top:1px solid rgba(139,0,0,.18);co
 
 /* RESPONSIVE */
 @media(max-width:960px){
-  nav{padding:12px 20px;top:38px;}.nav-logo img{height:44px;}.nav-links{display:none;}
+  nav{padding:12px 20px;top:38px;}.nav-logo img{height:44px;}
   #hero{padding:140px 24px 110px;}.hero-logo-img{height:64px;}.hero-stats{gap:16px;bottom:22px;}
   #trust{padding:18px 20px;}.trust-inner{gap:16px;}
   #sobre{padding:80px 24px;}.sobre-inner{grid-template-columns:1fr;gap:40px;}
@@ -603,12 +603,36 @@ window.addEventListener('scroll',()=>{
   else{nav.style.top='34px';nav.style.padding='14px 60px';}
 });
 
+/* ── Hamburger menu ── */
+const hamburger=document.getElementById('hamburgerBtn');
+const navLinks=document.getElementById('navLinks');
+hamburger.addEventListener('click',()=>{
+  const isOpen=navLinks.classList.toggle('open');
+  hamburger.classList.toggle('active');
+  hamburger.setAttribute('aria-expanded',isOpen);
+});
+navLinks.querySelectorAll('a').forEach(link=>{
+  link.addEventListener('click',()=>{
+    navLinks.classList.remove('open');
+    hamburger.classList.remove('active');
+    hamburger.setAttribute('aria-expanded','false');
+  });
+});
+
+/* ── FAQ toggle ── */
 document.querySelectorAll('.faq-question').forEach(btn=>{
+  btn.setAttribute('aria-expanded','false');
   btn.addEventListener('click',()=>{
     const item=btn.parentElement;
-    const open=item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
-    if(!open)item.classList.add('open');
+    const wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>{
+      i.classList.remove('open');
+      i.querySelector('.faq-question').setAttribute('aria-expanded','false');
+    });
+    if(!wasOpen){
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded','true');
+    }
   });
 });
 
