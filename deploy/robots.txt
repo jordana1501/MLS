@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /privacidade.html
-
-Sitemap: https://mendeslopes.adv.br/sitemap.xml
