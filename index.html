@@ -143,7 +143,7 @@ section{position:relative;z-index:1;}
 #advogados{padding:120px 60px;background:var(--navy-mid);}
 .advogados-header{text-align:center;margin-bottom:70px;}
 .advogados-header .section-label{justify-content:center;}.advogados-header .section-label::before{display:none;}
-.advogados-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:1100px;margin:0 auto;}
+.advogados-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:1200px;margin:0 auto;}
 .adv-card{background:var(--navy-light);border:1px solid rgba(0,0,0,.06);border-radius:4px;overflow:hidden;transition:all .4s;}
 .adv-card:hover{transform:translateY(-6px);box-shadow:0 24px 70px rgba(0,0,0,.08);border-color:rgba(139,0,0,.25);}
 .adv-photo{width:100%;aspect-ratio:3/4;overflow:hidden;position:relative;background:#eee;}
@@ -156,6 +156,7 @@ section{position:relative;z-index:1;}
 .adv-name{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.25;}
 .adv-oab{display:inline-block;padding:4px 12px;background:rgba(139,0,0,.12);border:1px solid var(--border);border-radius:20px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--red-light);margin-bottom:14px;}
 .adv-oab-pending{display:inline-block;padding:4px 12px;background:rgba(100,100,100,.1);border:1px solid rgba(100,100,100,.2);border-radius:20px;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-bottom:14px;}
+.adv-estagio{display:inline-block;padding:4px 12px;background:rgba(139,0,0,.06);border:1px solid rgba(139,0,0,.2);border-radius:20px;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--red-light);margin-bottom:14px;}
 .adv-divider{width:30px;height:1px;background:var(--red);margin-bottom:14px;}
 .adv-formation{font-size:13px;color:var(--text-body);font-weight:400;margin-bottom:8px;line-height:1.5;}
 .adv-spec{font-size:12px;color:var(--gray);font-weight:300;line-height:1.6;}
@@ -277,7 +278,7 @@ footer{padding:60px;background:#0d0d1a;border-top:1px solid rgba(139,0,0,.18);co
   #trust{padding:18px 20px;}.trust-inner{gap:16px;}
   #sobre{padding:80px 24px;}.sobre-inner{grid-template-columns:1fr;gap:40px;}
   #areas{padding:80px 24px;}.areas-grid{grid-template-columns:1fr;}.area-last{max-width:100%;grid-column:auto;}
-  #advogados{padding:80px 24px;}.advogados-grid{grid-template-columns:1fr;}
+  #advogados{padding:80px 24px;}.advogados-grid{grid-template-columns:1fr;}.adv-name{font-size:20px;}
   #midia{padding:80px 24px;}.midia-grid{grid-template-columns:1fr;}.midia-card.featured{grid-row:auto;}
   #faq{padding:80px 24px;}
   #cta{padding:70px 24px;}
@@ -304,6 +305,8 @@ footer{padding:60px;background:#0d0d1a;border-top:1px solid rgba(139,0,0,.18);co
   .sobre-inner{gap:50px;}
   .footer-top{grid-template-columns:1.5fr 1fr 1fr;gap:40px;}
   .footer-top > div:last-child{display:none;}
+  .advogados-grid{grid-template-columns:repeat(2,1fr);max-width:760px;}
+  .adv-name{font-size:19px;}
 }
 @media(max-width:960px){
   .hamburger{display:flex;}
@@ -467,6 +470,16 @@ footer{padding:60px;background:#0d0d1a;border-top:1px solid rgba(139,0,0,.18);co
         <span class="adv-oab-pending">OAB/DF — Em registro</span>
         <div class="adv-divider"></div>
         <p class="adv-formation">Bacharela em Direito pelo <strong style="color:var(--text)">UniCEUB</strong></p>
+        <p class="adv-spec">Especialização em andamento em <strong>Direito Civil e Processo Civil, Direito Penal e Processo Penal, Direito Público e Direito Empresarial</strong> pela Escola da Magistratura do Distrito Federal — <strong>ESMA-DF</strong></p>
+      </div>
+    </div>
+    <div class="adv-card reveal">
+      <div class="adv-photo"><img loading="lazy" src="Imagens/gabriel_opt.jpg" alt="Gabriel de Sales Gouvea — Estagiário"></div>
+      <div class="adv-info">
+        <h3 class="adv-name">Gabriel de Sales Gouvea</h3>
+        <span class="adv-estagio">Estagiário</span>
+        <div class="adv-divider"></div>
+        <p class="adv-formation">Bacharel em Direito pelo <strong style="color:var(--text)">UniCEUB</strong></p>
         <p class="adv-spec">Especialização em andamento em <strong>Direito Civil e Processo Civil, Direito Penal e Processo Penal, Direito Público e Direito Empresarial</strong> pela Escola da Magistratura do Distrito Federal — <strong>ESMA-DF</strong></p>
       </div>
     </div>

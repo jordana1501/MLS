@@ -6,7 +6,16 @@
       "Bash(git commit:*)",
       "Bash(git remote:*)",
       "Bash(git push:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(identify /mnt/c/jordana/Imagens/jordana_opt.jpg /mnt/c/jordana/Imagens/italo_opt.jpg /mnt/c/jordana/Imagens/bruna_opt.jpg /mnt/c/jordana/Imagens/Gabriel.jpeg)",
+      "Bash(python3 -c \"from PIL import Image; print\\('ok'\\)\")",
+      "Bash(pip install *)",
+      "Bash(pip3 install *)",
+      "Bash(apt list *)",
+      "Read(//tmp/**)",
+      "Bash(npm install *)",
+      "Bash(node -e ' *)",
+      "Bash(node *)"
     ]
   }
 }
